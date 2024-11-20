@@ -11,6 +11,7 @@
     <h1>Pokemon Card Detail</h1>
   </header>
   <button id="backToSearchBtn" class="back-button">Back to Search Results</button>
+  
   <!-- Container for the card details (image + table) -->
   <div id="cardDetailSection">
     <div id="cardImageContainer">
@@ -23,26 +24,26 @@
 
       <table>
         <tr>
-            <td>Type:</td>
-            <td id="cardType"></td> <!-- Display Super Type here -->
-          </tr>
-        <tr>
+          <td>Type:</td>
+          <td id="cardType"></td> <!-- Display Super Type here -->
+        </tr>
+        <tr id="cardHPRow">
           <td>HP:</td>
           <td id="cardHP"></td>
         </tr>
-        <tr>
+        <tr id="cardAbilitiesRow">
           <td>Abilities:</td>
           <td id="cardAbilities"></td>
         </tr>
-        <tr>
+        <tr id="cardAttacksRow">
           <td>Attacks:</td>
           <td id="cardAttacks"></td>
         </tr>
-        <tr>
+        <tr id="cardWeaknessSymbolsRow">
           <td>Weaknesses:</td>
           <td id="cardWeaknessSymbols"></td>
         </tr>
-        <tr>
+        <tr id="cardRetreatCostSymbolRow">
           <td>Retreat Cost:</td>
           <td id="cardRetreatCostSymbol"></td>
         </tr>
@@ -51,8 +52,9 @@
           <td id="cardSet"></td>
         </tr>
       </table>
+      
       <!-- Display special rules (if available) -->
-      <div id="specialRules" style="display: none;">
+      <div id="specialRules" class="special-rules-box" style="display: none;">
         <h3>Card Rules</h3>
         <p id="specialRulesContent"></p>
       </div>

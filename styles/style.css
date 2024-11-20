@@ -38,13 +38,10 @@ button:hover {
 
 input[type="text"] {
   padding: 10px;
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
   border-radius: 5px;
   border: 1px solid #ddd;
-}
-
-#toggleViewButton {
-  display: inline-block;
 }
 
 /* Search Results Section */
@@ -109,9 +106,41 @@ input[type="text"] {
   margin-bottom: 15px;
 }
 
+/* Responsive Grid Layout for Search Results */
+@media (max-width: 768px) {
+  .results.card-view {
+    grid-template-columns: repeat(2, 1fr); /* At least 2 rows of results */
+  }
+
+  /* Switch to list view if there are less than 2 items in a row */
+  .results.card-view > .card {
+    flex: 1 1 100%; /* Makes sure that it fills the container and appears as a list */
+  }
+}
+
+@media (max-width: 480px) {
+  .results.card-view {
+    grid-template-columns: 1fr; /* Ensure only 1 item per row for very small screens */
+  }
+
+  .results.card-view > .card {
+    flex: 1 1 100%; /* Makes sure each card is displayed as a block item */
+  }
+
+  .results.list-view {
+    display: block; /* Force list view for small screens */
+  }
+
+  /* Reduce font sizes for better readability */
+  .card h3, .list-item span {
+    font-size: 1rem;
+  }
+}
+
 /* Card Detail Page Styles */
 #cardDetailSection {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: flex-start;
   gap: 30px;
@@ -120,15 +149,15 @@ input[type="text"] {
 
 #cardImageContainer {
   width: 40%;
-  max-width: 400px; /* Set a maximum width for the image */
+  max-width: 400px;
   height: auto;
   overflow: hidden;
 }
 
 #cardImage {
   width: 100%;
-  height: auto; /* Keep the aspect ratio intact */
-  object-fit: contain; /* Ensures the image fits within its container */
+  height: auto;
+  object-fit: contain;
   border-radius: 10px;
 }
 
@@ -208,7 +237,11 @@ a:hover {
 }
 
 #backToSearchBtn {
-  display: inline-block;
+  display: flex; /* Ensures it can align itself */
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto; /* Centers the button horizontally */
+  width: auto;
   text-align: center;
   padding: 10px 20px;
   background-color: #007bff;
@@ -216,58 +249,85 @@ a:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin: 20px 0;
-  width: auto;
 }
 
 #backToSearchBtn:hover {
   background-color: #0056b3;
 }
 
-#backToSearchBtn {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  width: auto;
-}
-
 @media (max-width: 768px) {
   #cardDetailSection {
     flex-direction: column;
     align-items: center;
+    gap: 20px;
   }
 
-  #cardImageContainer {
-    width: 80%; /* Make the image container larger on smaller screens */
-  }
-
+  #cardImageContainer,
   #cardInfo {
-    width: 80%; /* Make the card info container larger on smaller screens */
+    width: 90%; /* Expand the width for better readability on smaller screens */
+  }
+
+  #cardImage {
+    max-width: 300px;
+  }
+
+  table td {
+    font-size: 0.9rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  button {
+    font-size: 0.9rem;
   }
 }
-#specialRules {
-  text-align: center; /* Centers the entire special rules section */
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+
+  table td {
+    font-size: 0.8rem;
+  }
+
+  #cardImage {
+    max-width: 200px;
+  }
+}
+
+/* Styling for the Card Rules box */
+.special-rules-box {
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background color */
+  border: 1px solid #ccc; /* Border for the box */
+  border-radius: 10px; /* Rounded corners */
   margin-top: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow for box */
 }
 
-#specialRulesContent {
-  display: inline-block; /* Makes the content block align in the center */
-  text-align: left; /* Keeps text aligned to the left inside the content block */
-  margin: 10px 0;
-  padding: 10px;
-  border: 1px solid #ccc; /* Optional: Adds a border around the special rules */
-  background-color: #f9f9f9; /* Optional: Adds a background color */
-  width: 80%; /* Optional: Adjust the width as per your design */
-  max-width: 600px; /* Optional: Ensures it doesn't stretch too wide */
-}
-/* Centering the set name and number */
-.card-set-info {
+.special-rules-box h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
   text-align: center;
-  font-weight: bold;
-  margin-top: 10px;
 }
 
-.card-set-info .set-name, .card-set-info .set-number {
-  display: inline-block;
-  margin: 0 5px;
+.special-rules-box p {
+  text-align: left; /* Align text to the left */
+  font-size: 1rem;
+}
+
+.special-rules-box strong {
+  font-weight: bold;
 }
