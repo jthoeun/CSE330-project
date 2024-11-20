@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Detail</title>
+  <link rel="stylesheet" href="/styles/style.css"> <!-- Make sure this points to your updated CSS -->
+</head>
+<body>
+  <header>
+    <h1>Pokemon Card Detail</h1>
+  </header>
+  <button id="backToSearchBtn" class="back-button">Back to Search Results</button>
+  <!-- Container for the card details (image + table) -->
+  <div id="cardDetailSection">
+    <div id="cardImageContainer">
+      <img id="cardImage" src="" alt="Card Image">
+    </div>
+    
+    <!-- Card information table -->
+    <div id="cardInfo">
+      <h2 id="cardName"></h2>
+
+      <table>
+        <tr>
+            <td>Type:</td>
+            <td id="cardType"></td> <!-- Display Super Type here -->
+          </tr>
+        <tr>
+          <td>HP:</td>
+          <td id="cardHP"></td>
+        </tr>
+        <tr>
+          <td>Abilities:</td>
+          <td id="cardAbilities"></td>
+        </tr>
+        <tr>
+          <td>Attacks:</td>
+          <td id="cardAttacks"></td>
+        </tr>
+        <tr>
+          <td>Weaknesses:</td>
+          <td id="cardWeaknessSymbols"></td>
+        </tr>
+        <tr>
+          <td>Retreat Cost:</td>
+          <td id="cardRetreatCostSymbol"></td>
+        </tr>
+        <tr>
+          <td>Set:</td>
+          <td id="cardSet"></td>
+        </tr>
+      </table>
+      <!-- Display special rules (if available) -->
+      <div id="specialRules" style="display: none;">
+        <h3>Card Rules</h3>
+        <p id="specialRulesContent"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/detail.js"></script> <!-- Make sure this points to your updated JS -->
+</body>
+</html>

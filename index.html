@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokemon Card Search</title>
+  <link rel="stylesheet" href="/styles/style.css"> <!-- Ensure this points to your updated CSS -->
+</head>
+<body>
+  <header>
+    <h1>Pokemon Card Search</h1>
+    <div>
+      <input type="text" id="searchInput" placeholder="Search for a Pokémon card">
+      <button id="searchButton">Search</button>
+    </div>
+    <button id="toggleViewButton">Toggle View</button>
+  </header>
+
+  <!-- Search Results Section -->
+  <section id="resultsSection" class="results card-view">
+    <!-- Results will be dynamically added here -->
+  </section>
+
+  <!-- Updated Result Card Template -->
+  <template id="cardResultTemplate">
+    <div class="card">
+      <img class="card-image" src="" alt="Card Image">
+      <h3 class="card-name"></h3>
+      <div class="card-set-info">
+        <span class="set-name"></span> - <span class="set-number"></span>
+      </div>
+      <button class="view-detail-btn">View Details</button>
+    </div>
+  </template>
+
+  <script src="/js/index.js"></script> <!-- Ensure this points to your updated JS -->
+</body>
+</html>
