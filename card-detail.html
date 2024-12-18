@@ -4,28 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Card Detail</title>
-  <link rel="stylesheet" href="/styles/style.css"> <!-- Make sure this points to your updated CSS -->
+  <link rel="stylesheet" href="/styles/style.css"> <!-- Ensure this points to your CSS -->
 </head>
 <body>
   <header>
-    <h1>Pokemon Card Detail</h1>
+    <h1>Pokémon Card Detail</h1>
   </header>
+
+  <!-- Back Button -->
   <button id="backToSearchBtn" class="back-button">Back to Search Results</button>
-  
-  <!-- Container for the card details (image + table) -->
+
+  <!-- Card Details Section -->
   <div id="cardDetailSection">
+    <!-- Card Image -->
     <div id="cardImageContainer">
-      <img id="cardImage" src="" alt="Card Image">
+      <img id="cardImage" src="" alt="Pokémon Card Image">
     </div>
     
-    <!-- Card information table -->
+    <!-- Card Info -->
     <div id="cardInfo">
       <h2 id="cardName"></h2>
-
+      
       <table>
         <tr>
           <td>Type:</td>
-          <td id="cardType"></td> <!-- Display Super Type here -->
+          <td id="cardType"></td>
         </tr>
         <tr id="cardHPRow">
           <td>HP:</td>
@@ -52,8 +55,8 @@
           <td id="cardSet"></td>
         </tr>
       </table>
-      
-      <!-- Display special rules (if available) -->
+
+      <!-- Special Rules -->
       <div id="specialRules" class="special-rules-box" style="display: none;">
         <h3>Card Rules</h3>
         <p id="specialRulesContent"></p>
@@ -61,6 +64,13 @@
     </div>
   </div>
 
-  <script src="/js/detail.js"></script> <!-- Make sure this points to your updated JS -->
+  <!-- Card Pricing Section -->
+  <div id="cardPricingSection">
+    <h3>Pricing</h3>
+    <p id="marketPrice">Market Price: <span>$0.00</span></p>
+    <a id="tcgplayerLink" href="#" target="_blank" rel="noopener noreferrer">View on TCGplayer</a>
+  </div>
+
+  <script src="/js/detail.js"></script>
 </body>
 </html>

@@ -4,18 +4,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const API_KEY = '367047db-c1d9-4e58-bc05-1d7b0f607eb1'; // Replace with your API key
 
-// Retrieve energy symbols from localStorage
-const energySymbols = JSON.parse(localStorage.getItem('energySymbols'));
-
-// Check if energy symbols are available in localStorage
-if (!energySymbols) {
-  console.error('Energy symbols not found in localStorage. Please ensure they are saved.');
-  alert('Energy symbols not found in localStorage.');
-}
-
 function loadCardDetails(cardId = null) {
   const urlParams = new URLSearchParams(window.location.search);
-  const currentCardId = cardId || urlParams.get('cardId'); // Use provided cardId or get from URL
+  const currentCardId = cardId || urlParams.get('cardId');
 
   if (!currentCardId) {
     alert('No card ID provided!');
@@ -23,73 +14,102 @@ function loadCardDetails(cardId = null) {
   }
 
   fetch(`https://api.pokemontcg.io/v2/cards/${currentCardId}`, {
-    headers: { 'X-Api-Key': API_KEY }
+    headers: { 'X-Api-Key': API_KEY },
   })
-    .then(response => response.json())
-    .then(data => {
-      if (data.data) {
-        displayCardDetails(data.data);
+    .then((response) => response.json())
+    .then((data) => {
+      if (data && data.data) {
+        const card = data.data; // `data.data` is the specific card object
+        displayCardDetails(card);
+        displayPricingDetails(card);
+        saveToSearchHistory(card);
       } else {
         alert('Card not found!');
       }
     })
-    .catch(error => console.error('Error fetching card details:', error));
+    .catch((error) => {
+      console.error('Error fetching card details:', error);
+      alert('An error occurred while loading card details. Please try again later.');
+    });
 }
 
 function displayCardDetails(card) {
-  // Update card image
+  // Card Image
   const cardImage = document.getElementById('cardImage');
-  cardImage.src = card.images.large || '';
-  cardImage.alt = card.name;
+  cardImage.src = card.images?.large || 'images/placeholder.png';
+  cardImage.alt = card.name || 'Unknown Card';
 
-  // Update card details in the table
-  document.getElementById('cardName').textContent = card.name;
+  // Card Name
+  document.getElementById('cardName').textContent = card.name || 'Unknown';
 
-  // Update card type (supertype)
-  const cardTypeCell = document.getElementById('cardType');
-  cardTypeCell.textContent = card.supertype || 'Unknown';
+  // Card Type (Supertype)
+  document.getElementById('cardType').textContent = card.supertype || 'Unknown';
 
-  // Check if the card is a Trainer and hide specific rows
-  const isTrainer = card.supertype && card.supertype.toLowerCase() === 'trainer';
+  // Check if the card is a Trainer
+  const isTrainer = card.supertype?.toLowerCase() === 'trainer';
   toggleRowVisibility('cardHPRow', !isTrainer);
   toggleRowVisibility('cardAbilitiesRow', !isTrainer);
   toggleRowVisibility('cardAttacksRow', !isTrainer);
   toggleRowVisibility('cardWeaknessSymbolsRow', !isTrainer);
   toggleRowVisibility('cardRetreatCostSymbolRow', !isTrainer);
 
-  // Update HP (only for non-Trainer cards)
+  // HP
   document.getElementById('cardHP').textContent = card.hp || 'N/A';
 
-  // Update abilities (only for non-Trainer cards)
+  // Abilities
   document.getElementById('cardAbilities').innerHTML = card.abilities
-    ? card.abilities.map(ability => `<strong>${ability.name}</strong>: ${ability.text}`).join('<br>')
+    ? card.abilities.map((ability) => `<strong>${ability.name}</strong>: ${ability.text}`).join('<br>')
     : 'N/A';
 
-  // Update attacks (only for non-Trainer cards)
+  // Attacks
   document.getElementById('cardAttacks').innerHTML = card.attacks
-    ? card.attacks.map(attack => formatAttack(attack)).join('<br>')
+    ? card.attacks.map((attack) => formatAttack(attack)).join('<br>')
     : 'N/A';
 
-  // Update weaknesses (only for non-Trainer cards)
+  // Weaknesses
   document.getElementById('cardWeaknessSymbols').innerHTML = formatWeaknesses(card.weaknesses || []);
 
-  // Update retreat cost (only for non-Trainer cards)
+  // Retreat Cost
   document.getElementById('cardRetreatCostSymbol').innerHTML = formatRetreatCost(card.retreatCost || []);
 
-  // Show set name
-  const setNameCell = document.getElementById('cardSet');
-  setNameCell.textContent = card.set ? card.set.name : 'N/A';
+  // Card Set
+  document.getElementById('cardSet').textContent = card.set?.name || 'N/A';
 
-  // Display special rules (if available)
+  // Special Rules
+  const specialRulesSection = document.getElementById('specialRules');
+  const specialRulesContent = document.getElementById('specialRulesContent');
   if (card.rules && card.rules.length > 0) {
-    const specialRulesSection = document.getElementById('specialRules');
-    const specialRulesContent = document.getElementById('specialRulesContent');
-    specialRulesContent.innerHTML = card.rules.map(rule => formatAceSpec(rule)).join('<br>');
-    specialRulesSection.style.display = 'block'; // Show the special rules section
+    specialRulesContent.innerHTML = card.rules.map(formatAceSpec).join('<br>');
+    specialRulesSection.style.display = 'block';
+  } else {
+    specialRulesSection.style.display = 'none';
   }
 }
 
-// Helper function to toggle row visibility
+function displayPricingDetails(card) {
+  const marketPriceElement = document.getElementById('marketPrice');
+  const tcgplayerLink = document.getElementById('tcgplayerLink');
+
+  // Default values
+  marketPriceElement.textContent = 'Unavailable';
+  tcgplayerLink.style.display = 'none';
+
+  if (card.tcgplayer && card.tcgplayer.prices) {
+    const prices = card.tcgplayer.prices;
+    const marketPrice = prices.market || prices.normal || prices.holofoil || null;
+
+    if (marketPrice) {
+      marketPriceElement.textContent = `$${parseFloat(marketPrice).toFixed(2)}`;
+    }
+  }
+
+  if (card.tcgplayer?.url) {
+    tcgplayerLink.href = card.tcgplayer.url;
+    tcgplayerLink.style.display = 'inline';
+  }
+}
+
+// Helper: Toggle row visibility
 function toggleRowVisibility(rowId, isVisible) {
   const row = document.getElementById(rowId);
   if (row) {
@@ -97,51 +117,47 @@ function toggleRowVisibility(rowId, isVisible) {
   }
 }
 
-// Helper function to format attack details
+// Helper: Format attack details
 function formatAttack(attack) {
-  const energyCost = attack.cost
-    .map(cost => {
-      const costName = cost.toLowerCase() === 'electric' ? 'lightning' : cost.toLowerCase();
-      return `<img src="images/${costName}.png" alt="${cost}" class="energy-icon">`;
-    })
+  const energyCost = (attack.cost || [])
+    .map((cost) => `<img src="images/${cost.toLowerCase()}.png" alt="${cost}" class="energy-icon">`)
     .join(' ');
   return `<strong>${attack.name}</strong> (${attack.damage || '0'}) - ${energyCost}`;
 }
 
-// Helper function to format weaknesses
+// Helper: Format weaknesses
 function formatWeaknesses(weaknesses) {
   if (weaknesses.length === 0) return 'N/A';
   return weaknesses
-    .map(weakness => {
-      const type = weakness.type.toLowerCase() === 'electric' ? 'lightning' : weakness.type.toLowerCase();
-      return `<img src="images/${type}.png" alt="${weakness.type}" class="symbol-icon"> (${weakness.value})`;
-    })
+    .map((weakness) => `<img src="images/${weakness.type.toLowerCase()}.png" alt="${weakness.type}" class="symbol-icon"> (${weakness.value})`)
     .join(' ');
 }
 
-// Helper function to format retreat cost
+// Helper: Format retreat cost
 function formatRetreatCost(costs) {
   if (costs.length === 0) return 'N/A';
   return costs
-    .map(cost => {
-      const costName = cost.toLowerCase() === 'electric' ? 'lightning' : cost.toLowerCase();
-      return `<img src="images/${costName}.png" alt="${cost}" class="symbol-icon">`;
-    })
+    .map((cost) => `<img src="images/${cost.toLowerCase()}.png" alt="${cost}" class="symbol-icon">`)
     .join(' ');
 }
 
-// Function to format ACE SPEC in special rules
+// Helper: Format special rules (ACE SPEC)
 function formatAceSpec(ruleText) {
-  if (ruleText.toUpperCase().includes("ACE SPEC")) {
-    return ruleText.replace(/(ACE SPEC:)/i, '<strong>$1</strong>');
-  }
-  return ruleText;
+  return ruleText.replace(/(ACE SPEC:)/i, '<strong>$1</strong>');
 }
 
-// Event listener for "Back to Search Results" button
-const backButton = document.getElementById('backToSearchBtn');
-if (backButton) {
-  backButton.addEventListener('click', function () {
-    window.location.href = 'index.html'; // Redirect to the search results page
-  });
+// Back Button: Redirect to search results
+document.getElementById('backToSearchBtn')?.addEventListener('click', () => {
+  window.location.href = 'index.html';
+});
+
+// Save card to search history
+function saveToSearchHistory(card) {
+  const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+  searchHistory.unshift(card);
+
+  // Limit history to 5 entries
+  if (searchHistory.length > 5) searchHistory.pop();
+
+  localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
 }

@@ -331,3 +331,48 @@ a:hover {
 .special-rules-box strong {
   font-weight: bold;
 }
+#cardPricingSection {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#cardPricingSection h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+#marketPrice {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+#tcgplayerLink {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+#tcgplayerLink:hover {
+  background-color: #0056b3;
+}
+nav ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove padding */
+}
+
+nav li {
+  display: inline-table; /* Display list items inline */
+  margin-right: 10px; /* Optional: space between the links */
+}
+
+nav a {
+  text-decoration: none; /* Remove underline from links */
+}

@@ -4,26 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokemon Card Search</title>
-  <link rel="stylesheet" href="/styles/style.css"> <!-- Ensure this points to your updated CSS -->
+  <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
+  
   <header>
-    <h1>Pokemon Card Search</h1>
+    <h1>Pokemon Card Search & Tools</h1>
+    <nav>
+      <ul>
+        <li>Tools:</li>
+        <li><a href="https://www.pokemon.com/us/play-pokemon/about/tournaments-rules-and-resources" target="_blank">Pokemon Rules & Resources</a></li>
+        <li><a href="https://compendium.pokegym.net/" target="_blank">Pokemon Rulings Compendium</a></li>
+      </ul>
+    </nav>
+    <br>
     <div>
       <input type="text" id="searchInput" placeholder="Search for a Pokémon card">
       <button id="searchButton">Search</button>
     </div>
   </header>
 
-  <!-- Search Results Section -->
-  <section id="resultsSection" class="results card-view">
-    <!-- Results will be dynamically added here -->
+  <!-- Search History Section -->
+  <section id="searchHistorySection">
+    <h3>Search History</h3>
+    <ul id="searchHistoryList" class="results list-view">
+      <!-- Search history items will be dynamically appended here -->
+    </ul>
   </section>
 
-  <!-- Updated Result Card Template -->
-  <template id="cardResultTemplate">
+  <!-- Search Results Section -->
+  <section id="resultsSection" class="results card-view">
+    <!-- Search results will be dynamically appended here -->
+  </section>
+
+  <!-- Template for cards -->
+  <template id="cardTemplate">
     <div class="card">
-      <img class="card-image" src="" alt="Card Image">
+      <img class="card-image" src="" alt="Pokemon Card">
       <h3 class="card-name"></h3>
       <div class="card-set-info">
         <span class="set-name"></span> - <span class="set-number"></span>
@@ -32,6 +49,6 @@
     </div>
   </template>
 
-  <script src="/js/index.js"></script> <!-- Ensure this points to your updated JS -->
+  <script src="/js/index.js"></script>
 </body>
 </html>

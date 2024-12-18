@@ -3,8 +3,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchButton = document.getElementById('searchButton');
   const searchInput = document.getElementById('searchInput');
   const resultsSection = document.getElementById('resultsSection');
+  const searchHistoryList = document.getElementById('searchHistoryList'); // Element to display search history
 
-  // Fetch and display search results
+  // Load and display search history from localStorage
+  loadSearchHistory();
+
+  // Pre-fill search input if a previous query exists
+  const lastSearchQuery = localStorage.getItem('lastSearchQuery');
+  if (lastSearchQuery) {
+    searchInput.value = lastSearchQuery;
+    performSearch(lastSearchQuery); // Automatically display results
+  }
+
+  // Fetch and display search results on button click
   searchButton.addEventListener('click', () => {
     const query = searchInput.value.trim();
     if (!query) {
@@ -12,6 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Save the query to localStorage for reuse
+    localStorage.setItem('lastSearchQuery', query);
+    saveSearchHistory(query); // Save to history
+    performSearch(query);
+  });
+
+  // Function to perform the search
+  function performSearch(query) {
     fetch(`https://api.pokemontcg.io/v2/cards?q=name:${query}`, {
       headers: { 'X-Api-Key': API_KEY }
     })
@@ -24,8 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       })
       .catch(error => console.error('Error fetching cards:', error));
-  });
+  }
 
+  // Function to display results
   function displayResults(cards) {
     resultsSection.innerHTML = ''; // Clear previous results
     cards.forEach(card => {
@@ -34,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Function to create card elements
   function createCardElement(card) {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'card';
@@ -57,41 +78,45 @@ document.addEventListener('DOMContentLoaded', () => {
     cardDiv.appendChild(cardNumber);
 
     const cardLink = document.createElement('a');
-    cardLink.href = `card-detail.html?cardId=${card.id}`; // Reverted to card-detail.html?cardId=...
+    cardLink.href = `card-detail.html?cardId=${card.id}`; // Link to card details
     cardLink.textContent = 'View Details';
     cardDiv.appendChild(cardLink);
 
     return cardDiv;
   }
 
-  function createListElement(card) {
-    const listItem = document.createElement('div');
-    listItem.className = 'list-item';
+  // Save the query to the search history in localStorage
+  function saveSearchHistory(query) {
+    let searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
-    const thumbnail = document.createElement('img');
-    thumbnail.src = card.images.small;
-    thumbnail.alt = card.name;
-    thumbnail.className = 'thumbnail';
-    listItem.appendChild(thumbnail);
-
-    const cardName = document.createElement('span');
-    cardName.textContent = card.name;
-    listItem.appendChild(cardName);
-
-    // Display the set name and card number on separate lines
-    const cardSetName = document.createElement('p');
-    cardSetName.textContent = card.set.name; // Set name
-    listItem.appendChild(cardSetName);
-
-    const cardNumber = document.createElement('p');
-    cardNumber.textContent = card.number; // Card number
-    listItem.appendChild(cardNumber);
-
-    const cardLink = document.createElement('a');
-    cardLink.href = `card-detail.html?cardId=${card.id}`; // Reverted to card-detail.html?cardId=...
-    cardLink.textContent = 'View Details';
-    listItem.appendChild(cardLink);
-
-    return listItem;
+    // Prevent adding duplicate searches
+    if (!searchHistory.includes(query)) {
+      searchHistory.unshift(query); // Add new search at the beginning
+      if (searchHistory.length > 10) {
+        searchHistory = searchHistory.slice(0, 10); // Limit to 10 searches
+      }
+      localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+      loadSearchHistory(); // Update the displayed search history
+    }
   }
+
+  // Load and display search history from localStorage
+  function loadSearchHistory() {
+    const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    searchHistoryList.innerHTML = ''; // Clear the history list
+
+    searchHistory.forEach(query => {
+      const historyItem = document.createElement('li');
+      historyItem.textContent = query;
+      
+      // When a search history item is clicked, trigger the search
+      historyItem.addEventListener('click', () => {
+        searchInput.value = query;
+        searchButton.click(); // Trigger search button click
+      });
+
+      searchHistoryList.appendChild(historyItem);
+    });
+  }
+
 });
